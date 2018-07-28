@@ -24,6 +24,9 @@ func main() {
 	for i:=0; i < num; i++ {
 		s := strconv.Itoa(i)
 		err = db.Put([]byte(s), []byte("test"), nil)
+		if err != nil {
+			fmt.Println("err")
+		}
 	}
 	elapsed := time.Since(start)
 	fmt.Println("Sequential Write: ", elapsed)
@@ -33,6 +36,9 @@ func main() {
 	for _, value := range rand.Perm(num) {
 		s := strconv.Itoa(value)
 		err = db.Put([]byte(s), []byte("test"), nil)
+		if err != nil {
+			fmt.Println("err")
+		}
 	}
 	elapsed = time.Since(start)
 	fmt.Println("Random Write: ", elapsed)
