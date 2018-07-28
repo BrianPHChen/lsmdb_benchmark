@@ -11,7 +11,7 @@ import (
 const num = 1000000
 
 func main() {
-	db, err := leveldb.OpenFile("./db", nil)
+	db, err := leveldb.OpenFile("./leveldb", nil)
 	defer db.Close()
 
 	if err != nil {
