@@ -8,7 +8,7 @@ import (
 	"github.com/syndtr/goleveldb/leveldb"
 )
 
-const num = 1000000
+const num = 10000000
 
 func main() {
 	db, err := leveldb.OpenFile("./leveldb", nil)
@@ -20,7 +20,6 @@ func main() {
 	fmt.Println("Data Number: ", num)
 
 	// Sequential Write
-	fmt.Println("Start to sequential write")
 	start := time.Now()
 	for i:=0; i < num; i++ {
 		s := strconv.Itoa(i)
@@ -30,10 +29,9 @@ func main() {
 		}
 	}
 	elapsed := time.Since(start)
-	fmt.Println("Sequential write time cost: ", elapsed, "\n")
+	fmt.Println("Sequential write time cost: ", elapsed)
 
 	// Delete data in ordered sequence
-	fmt.Println("Start to delete data in ordered sequence")
 	start = time.Now()
 
 	for i:=0; i < num; i++ {
@@ -45,10 +43,9 @@ func main() {
 	}
 
 	elapsed = time.Since(start)
-	fmt.Println("Delete data in ordered sequence time cost: ", elapsed, "\n")
+	fmt.Println("Delete data in ordered sequence time cost: ", elapsed)
 
 	// Sequential Write
-	fmt.Println("Start to sequential write")
 	start = time.Now()
 	for i:=0; i < num; i++ {
 		s := strconv.Itoa(i)
@@ -58,10 +55,9 @@ func main() {
 		}
 	}
 	elapsed = time.Since(start)
-	fmt.Println("Sequential write time cost: ", elapsed, "\n")
+	fmt.Println("Sequential write time cost: ", elapsed)
 
 	// Delete data in random sequence
-	fmt.Println("Start to delete data in random sequence")
 	start = time.Now()
 
 	for _, value := range rand.Perm(num) {
@@ -73,10 +69,9 @@ func main() {
 	}
 
 	elapsed = time.Since(start)
-	fmt.Println("Delete data in random sequence time cost: ", elapsed, "\n")
+	fmt.Println("Delete data in random sequence time cost: ", elapsed)
 
 	// Random Write
-	fmt.Println("Start to random write")
 	start = time.Now()
 	for _, value := range rand.Perm(num) {
 		s := strconv.Itoa(value)
@@ -86,10 +81,9 @@ func main() {
 		}
 	}
 	elapsed = time.Since(start)
-	fmt.Println("Random write time cost: ", elapsed, "\n")
+	fmt.Println("Random write time cost: ", elapsed)
 
 	// Sequential Read
-	fmt.Println("Start to sequential read")
 	start = time.Now()
 	for i:=0; i < num; i++ {
 		s := strconv.Itoa(i)
@@ -100,10 +94,9 @@ func main() {
 		}
 	}
 	elapsed = time.Since(start)
-	fmt.Println("Sequential read time cost: ", elapsed, "\n")
+	fmt.Println("Sequential read time cost: ", elapsed)
 
 	// Random Read
-	fmt.Println("Start to random read")
 	start = time.Now()
 	for _, value := range rand.Perm(num) {
 		s := strconv.Itoa(value)
@@ -114,10 +107,9 @@ func main() {
 		}
 	}
 	elapsed = time.Since(start)
-	fmt.Println("Random read time cost: ", elapsed, "\n")
+	fmt.Println("Random read time cost: ", elapsed)
 
-	// Batch write
-	fmt.Println("Start to batch write in ordered sequence")
+	// Batch write in ordered sequence
 	start = time.Now()
 	batch := new(leveldb.Batch)
 	for i:=0; i < num; i++ {
@@ -129,5 +121,19 @@ func main() {
 		fmt.Println("err")
 	}
 	elapsed = time.Since(start)
-	fmt.Println("Batch write in ordered sequence time cost: ", elapsed, "\n")
+	fmt.Println("Batch write in ordered sequence time cost: ", elapsed)
+
+	// Batch Write in random sequence
+	start = time.Now()
+	batchR := new(leveldb.Batch)
+	for _, value := range rand.Perm(num) {
+		s := strconv.Itoa(value)
+		batchR.Put([]byte(s), []byte("test"))
+	}
+	err = db.Write(batchR, nil)
+	if err != nil {
+		fmt.Println("err")
+	}
+	elapsed = time.Since(start)
+	fmt.Println("Batch write in random sequence time cost: ", elapsed)
 }
